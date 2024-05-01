@@ -71,7 +71,3 @@ class Cryptocurrencies(object):
                 print("Extended Output is {}, returning reduced dataset.".format(self.extended_output))
             outcome = outcome[['id', 'display_name', 'fx_stablecoin', 'max_slippage_percentage', 'status']]
             return outcome
-
-
-data = Cryptocurrencies(coin_search='DOGE', extended_output=False).find_crypto_pairs()
-print(data)

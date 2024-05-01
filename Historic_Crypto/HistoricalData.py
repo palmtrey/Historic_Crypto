@@ -14,8 +14,8 @@ class HistoricalData(object):
     This class provides methods for gathering historical price data of a specified
     Cryptocurrency between user specified time periods. The class utilises the CoinBase Pro
     API to extract historical data, providing a performant method of data extraction.
-    
-    Please Note that Historical Rate Data may be incomplete as data is not published when no 
+
+    Please Note that Historical Rate Data may be incomplete as data is not published when no
     ticks are available (Coinbase Pro API Documentation).
 
     :param: ticker: a singular Cryptocurrency ticker. (str)
@@ -90,7 +90,7 @@ class HistoricalData(object):
             if self.verbose:
                 print("Ticker '{}' found at the CoinBase Pro API, continuing to extraction.".format(self.ticker))
         else:
-            raise ValueError("""Ticker: '{}' not available through CoinBase Pro API. Please use the Cryptocurrencies 
+            raise ValueError("""Ticker: '{}' not available through CoinBase Pro API. Please use the Cryptocurrencies
             class to identify the correct ticker.""".format(self.ticker))
 
     def _date_cleaner(self, date_time: (datetime, str)):
@@ -157,9 +157,6 @@ class HistoricalData(object):
                 provisional_start = self._date_cleaner(provisional_start)
                 provisional_end = start + timedelta(0, (i + 1) * (self.granularity * max_per_mssg))
                 provisional_end = self._date_cleaner(provisional_end)
-
-                print("Provisional Start: {}".format(provisional_start))
-                print("Provisional End: {}".format(provisional_end))
                 response = requests.get(
                     "https://api.pro.coinbase.com/products/{0}/candles?start={1}&end={2}&granularity={3}".format(
                         self.ticker,
@@ -176,7 +173,7 @@ class HistoricalData(object):
                         data = pd.concat([data, dataset])
                         time.sleep(randint(0, 2))
                     else:
-                        print("""CoinBase Pro API did not have available data for '{}' beginning at {}.  
+                        print("""CoinBase Pro API did not have available data for '{}' beginning at {}.
                         Trying a later date:'{}'""".format(self.ticker,
                                                            self.start_date,
                                                            provisional_start))
@@ -203,8 +200,3 @@ class HistoricalData(object):
             data.sort_index(ascending=True, inplace=True)
             data.drop_duplicates(subset=None, keep='first', inplace=True)
             return data
-
-
-new = HistoricalData('BTC-USD', 3600, '2021-06-01-00-00', '2021-07-01-00-00').retrieve_data()
-print(new.head())
-print(new.tail())
